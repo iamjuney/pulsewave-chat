@@ -1,67 +1,198 @@
-# SpacetimeDB TypeScript Quickstart Chat
+# ⚡ Pulsewave Chat
 
-This is a simple chat application that demonstrates how to use SpacetimeDB with TypeScript and React. The chat application is a simple chat room where users can send messages to each other. The chat application uses SpacetimeDB to store the chat messages.
+A **real-time chat application** powered by [SpacetimeDB](https://spacetimedb.com) — a next-gen serverless database that replaces your backend. Built with React 19, TypeScript, and Vite for a lightning-fast, modern chat experience.
 
-It is based directly on the plain React + TypeScript + Vite template. You can follow the quickstart guide for how creating this project from scratch at [SpacetimeDB TypeScript Quickstart](https://spacetimedb.com/docs/sdks/typescript/quickstart).
+> 🌐 **Live Demo**: Deployed on [Vercel](https://vercel.com) with SpacetimeDB MainCloud
 
-You can follow the instructions for creating your own SpacetimeDB module here: [SpacetimeDB Rust Module Quickstart](https://spacetimedb.com/docs/modules/rust/quickstart). Place the module in the `quickstart-chat/server` directory for compability with this project.
+---
 
-In order to run this example, you need to:
+## ✨ Features
 
-- `pnpm build` in the root directory (`spacetimedb-typescriptsdk`)
-- `pnpm install` in this directory
-- `pnpm build` in this directory
-- `pnpm dev` in this directory to run the example
+### 💬 Messaging
+- **Real-time messaging** — instant delivery powered by SpacetimeDB subscriptions
+- **Message editing** — edit your sent messages with an `(edited)` indicator
+- **Message deletion** — remove your own messages
+- **Reply threads** — reply to specific messages with inline preview context
+- **Image sharing** — send images alongside text messages
+- **Message search** — search through chat history with jump-to-message navigation
 
-Below is copied from the original template README:
+### 🏠 Rooms & Conversations
+- **Chat rooms** — create and join public chat rooms
+- **Direct messages** — private 1-on-1 conversations
+- **Default "general" room** — new users auto-join on first connection
+- **Unread counts** — per-room unread message badges
+- **Room membership** — join/leave rooms with member counts
 
-# React + TypeScript + Vite
+### 👤 User Profiles
+- **Customizable display names** — set and update your username
+- **User avatars** — upload profile pictures via URL
+- **User bios** — add a personal bio to your profile
+- **Profile cards** — click on any user to view their profile
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### 🟢 Presence & Interaction
+- **Online/offline status** — real-time user presence tracking
+- **Typing indicators** — see when others are typing (auto-clears after 3s)
+- **Emoji reactions** — react to messages with emojis (toggle on/off)
+- **System messages** — join/leave notifications in the chat
 
-Currently, two official plugins are available:
+### 🔐 Authentication
+- **OIDC login** — secure authentication via SpacetimeDB Auth (OpenID Connect)
+- **Session persistence** — auth tokens stored in local storage
+- **Login page** — clean, dedicated login UI
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🎨 UI/UX
+- **Responsive design** — desktop sidebar + mobile sheet navigation
+- **Dark mode** — sleek dark-themed interface
+- **Smooth animations** — fade-in, zoom-in transitions and loading states
+- **Auto-scroll** — automatically scroll to the latest messages
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🛠️ Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+### Frontend
+| Technology | Purpose |
+|---|---|
+| [React 19](https://react.dev) | UI framework |
+| [TypeScript](https://www.typescriptlang.org) | Type-safe development |
+| [Vite 7](https://vite.dev) | Build tool & dev server |
+| [Tailwind CSS 4](https://tailwindcss.com) | Utility-first styling |
+| [shadcn/ui](https://ui.shadcn.com) | Accessible UI components (New York style) |
+| [Radix UI](https://www.radix-ui.com) | Headless UI primitives |
+| [Lucide React](https://lucide.dev) | Icon library |
+| [react-oidc-context](https://github.com/authts/react-oidc-context) | OIDC authentication |
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+### Backend
+| Technology | Purpose |
+|---|---|
+| [SpacetimeDB](https://spacetimedb.com) | Serverless database + real-time sync |
+| SpacetimeDB TypeScript Module | Server-side logic (reducers & tables) |
+
+### Dev Tools
+| Technology | Purpose |
+|---|---|
+| [Vitest](https://vitest.dev) | Unit testing framework |
+| [Testing Library](https://testing-library.com) | React component testing |
+| [ESLint](https://eslint.org) | Code linting |
+| [Prettier](https://prettier.io) | Code formatting |
+
+### Deployment
+| Technology | Purpose |
+|---|---|
+| [Vercel](https://vercel.com) | Frontend hosting |
+| [SpacetimeDB MainCloud](https://spacetimedb.com) | Database hosting |
+
+---
+
+## 📁 Project Structure
+
+```
+├── index.html                 # Entry HTML
+├── src/
+│   ├── main.tsx               # App entry point with OIDC + SpacetimeDB providers
+│   ├── App.tsx                # Main chat application component
+│   ├── auth.ts                # OIDC configuration
+│   ├── types.ts               # Shared TypeScript types
+│   ├── index.css              # Global styles & Tailwind config
+│   ├── components/
+│   │   ├── ChatSidebar.tsx    # Room list & user controls
+│   │   ├── ChatHeader.tsx     # Room header with actions
+│   │   ├── ChatMessage.tsx    # Message bubble with reactions
+│   │   ├── ChatInput.tsx      # Message composer with typing indicator
+│   │   ├── RoomList.tsx       # Room listing & creation
+│   │   ├── MessageSearch.tsx  # Search overlay with results
+│   │   ├── UserProfileCard.tsx# Profile modal with edit support
+│   │   ├── ReplyPreview.tsx   # Inline reply context
+│   │   ├── LoginPage.tsx      # OIDC login screen
+│   │   ├── EmptyState.tsx     # Empty room placeholder
+│   │   └── ui/               # shadcn/ui components
+│   ├── module_bindings/       # Auto-generated SpacetimeDB bindings
+│   └── lib/                   # Utility functions
+├── spacetimedb/
+│   └── src/
+│       └── index.ts           # Server module (tables, reducers, lifecycle)
+├── spacetime.json             # SpacetimeDB project config
+├── components.json            # shadcn/ui config
+└── vercel.json                # Vercel deployment config
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+## 🚀 Getting Started
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
+### Prerequisites
+
+- [Node.js](https://nodejs.org) (v18+) or [Bun](https://bun.sh)
+- [SpacetimeDB CLI](https://spacetimedb.com/docs/getting-started)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/iamjuney/chat-react-spacetimedb.git
+cd chat-react-spacetimedb
+
+# Install dependencies
+npm install
 ```
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_SPACETIMEDB_HOST=ws://localhost:3000
+VITE_SPACETIMEDB_DB_NAME=quickstart-chat
+VITE_SPACETIMEAUTH_CLIENT_ID=YOUR_CLIENT_ID
+```
+
+### Running Locally
+
+```bash
+# Publish the SpacetimeDB module locally
+npm run spacetime:publish:local
+
+# Generate TypeScript bindings
+npm run spacetime:generate
+
+# Start the dev server
+npm run dev
+```
+
+### Deploying to MainCloud
+
+```bash
+# Publish the module to SpacetimeDB MainCloud
+npm run spacetime:publish
+
+# Build for production
+npm run build
+```
+
+---
+
+## 📜 Available Scripts
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Preview the production build |
+| `npm run test` | Run unit tests with Vitest |
+| `npm run lint` | Lint and format check |
+| `npm run format` | Auto-format with Prettier |
+| `npm run spacetime:generate` | Generate TypeScript bindings from the module |
+| `npm run spacetime:publish:local` | Publish module to local SpacetimeDB |
+| `npm run spacetime:publish` | Publish module to MainCloud |
+
+---
+
+## 📄 License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
+
+---
+
+<p align="center">
+  Built with ❤️ using <a href="https://spacetimedb.com">SpacetimeDB</a> + <a href="https://react.dev">React</a>
+</p>
