@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import type { Room } from "@/module_bindings/types";
 import {
@@ -12,6 +12,11 @@ import { useAuth } from "react-oidc-context";
 interface ChatHeaderProps {
     room: Room | null;
     memberCount: number;
+    onlineMembers?: Array<{
+        identityHex: string;
+        name: string;
+        avatarUrl: string | null;
+    }>;
     currentUserName: string;
     settingName: boolean;
     newName: string;
@@ -29,6 +34,7 @@ interface ChatHeaderProps {
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
     room,
     memberCount,
+    onlineMembers,
     currentUserName,
     settingName,
     newName,
@@ -43,6 +49,11 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
     sidebarContent,
 }) => {
     const auth = useAuth();
+
+    const onlineDisplay = onlineMembers?.slice(0, 3) || [];
+    const remainingOnline = Math.max(0, (onlineMembers?.length || 0) - onlineDisplay.length);
+    const colors = ["bg-red-500", "bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-pink-500", "bg-purple-500"];
+    const getColor = (str: string) => colors[str.charCodeAt(0) % colors.length];
 
     const handleNameSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -67,18 +78,22 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
 
                 <div className="flex items-center gap-3">
                     <div className="flex items-center -space-x-2 mr-4">
-                        <Avatar className="h-8 w-8 border-2 border-[#17181c]">
-                            <AvatarFallback className="bg-red-500 text-white text-[10px]">RA</AvatarFallback>
-                        </Avatar>
-                        <Avatar className="h-8 w-8 border-2 border-[#17181c]">
-                            <AvatarFallback className="bg-blue-500 text-white text-[10px]">JD</AvatarFallback>
-                        </Avatar>
-                        <Avatar className="h-8 w-8 border-2 border-[#17181c]">
-                            <AvatarFallback className="bg-green-500 text-white text-[10px]">MK</AvatarFallback>
-                        </Avatar>
-                        <div className="h-8 w-8 rounded-full bg-indigo-500/20 border-2 border-[#17181c] flex items-center justify-center text-indigo-400 font-bold text-[10px]">
-                            +
-                        </div>
+                        {onlineDisplay.map((user) => (
+                            <Avatar key={user.identityHex} className="h-8 w-8 border-2 border-[#17181c]">
+                                <AvatarImage src={user.avatarUrl ?? undefined} />
+                                <AvatarFallback className={`${getColor(user.identityHex)} text-white text-[10px]`}>
+                                    {user.name.substring(0, 2).toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                        ))}
+                        {remainingOnline > 0 && (
+                            <div className="h-8 w-8 rounded-full bg-indigo-500/20 border-2 border-[#17181c] flex items-center justify-center text-indigo-400 font-bold text-[10px]">
+                                +{remainingOnline}
+                            </div>
+                        )}
+                        {!onlineMembers?.length && (
+                            <div className="text-[11px] text-muted-foreground mr-2 px-2">No one online</div>
+                        )}
                     </div>
                     
                     {!isMember && room && !room.isDm && (

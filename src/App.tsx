@@ -158,6 +158,22 @@ function App() {
         [roomMembers, selectedRoomId],
     );
 
+    const currentRoomOnlineMembers = useMemo(() => {
+        if (selectedRoomId === null) return [];
+        const memberIds = new Set(
+            roomMembers
+                .filter((m) => m.roomId === selectedRoomId)
+                .map((m) => m.userId.toHexString())
+        );
+        return onlineUsers
+            .filter((u) => memberIds.has(u.identity.toHexString()))
+            .map((u) => ({
+                identityHex: u.identity.toHexString(),
+                name: u.name || u.identity.toHexString().substring(0, 8),
+                avatarUrl: u.avatarUrl || null,
+            }));
+    }, [selectedRoomId, roomMembers, onlineUsers]);
+
     // DM room name: show the other user's name
     const currentRoomDisplay = useMemo(() => {
         if (!currentRoom) return null;
@@ -560,6 +576,7 @@ function App() {
                 <ChatHeader
                     room={currentRoomDisplay}
                     memberCount={roomMemberCount}
+                    onlineMembers={currentRoomOnlineMembers}
                     currentUserName={name}
                     settingName={settingName}
                     newName={newName}
