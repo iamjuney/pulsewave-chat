@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -110,38 +111,41 @@ export const RoomList: React.FC<RoomListProps> = ({
                             )}
                             Channels
                         </button>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 text-muted-foreground hover:text-primary"
-                            onClick={() =>
-                                setShowCreateChannel(!showCreateChannel)
-                            }
-                        >
-                            <Plus className="h-3 w-3" />
-                        </Button>
+                        <Dialog open={showCreateChannel} onOpenChange={setShowCreateChannel}>
+                            <DialogTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-5 w-5 text-muted-foreground hover:text-primary"
+                                >
+                                    <Plus className="h-3 w-3" />
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                                <form onSubmit={handleCreateChannel}>
+                                    <DialogHeader>
+                                        <DialogTitle>Create new channel</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                        <div className="grid gap-2">
+                                            <Input
+                                                id="name"
+                                                placeholder="Channel name..."
+                                                value={newChannelName}
+                                                onChange={(e) => setNewChannelName(e.target.value)}
+                                                className="col-span-3"
+                                                autoFocus
+                                            />
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button type="submit">Create Channel</Button>
+                                    </DialogFooter>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
-
-                {showCreateChannel && (
-                    <form onSubmit={handleCreateChannel} className="px-5 mb-2">
-                        <Input
-                            autoFocus
-                            placeholder="Channel name..."
-                            value={newChannelName}
-                            onChange={(e) => setNewChannelName(e.target.value)}
-                            onBlur={() => {
-                                if (!newChannelName.trim())
-                                    setShowCreateChannel(false);
-                            }}
-                            onKeyDown={(e) => {
-                                if (e.key === "Escape")
-                                    setShowCreateChannel(false);
-                            }}
-                            className="h-8 text-xs bg-[#141418] border-none"
-                        />
-                    </form>
-                )}
 
                 {channelsExpanded && (
                     <div className="px-2 space-y-0.5">

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { X, Pencil, Check, Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { Check, Circle, Pencil } from "lucide-react";
+import React, { useState } from "react";
 
 interface UserProfileCardProps {
     name: string;
@@ -41,17 +41,9 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-in fade-in duration-200">
-            <Card className="w-full max-w-sm mx-4 shadow-xl animate-in zoom-in-95 duration-200">
-                <CardHeader className="pb-3 relative">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-3 top-3 h-7 w-7"
-                        onClick={onClose}
-                    >
-                        <X className="h-4 w-4" />
-                    </Button>
+        <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="sm:max-w-sm p-0 gap-0 overflow-hidden">
+                <DialogHeader className="p-6 pb-3 relative">
                     <div className="flex flex-col items-center gap-3">
                         <div className="relative">
                             <Avatar className="h-20 w-20 border-2 border-primary/20">
@@ -61,7 +53,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                                 </AvatarFallback>
                             </Avatar>
                             <span
-                                className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-card ${
+                                className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-background ${
                                     online
                                         ? "bg-green-500"
                                         : "bg-muted-foreground/30"
@@ -69,7 +61,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                             />
                         </div>
                         <div className="text-center">
-                            <CardTitle className="text-lg">{name}</CardTitle>
+                            <DialogTitle className="text-lg text-center">{name}</DialogTitle>
                             <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                                 {identity.substring(0, 16)}...
                             </p>
@@ -84,9 +76,9 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                             </Badge>
                         </div>
                     </div>
-                </CardHeader>
+                </DialogHeader>
                 <Separator />
-                <CardContent className="pt-4 space-y-4">
+                <div className="p-6 pt-4 space-y-4">
                     {editing ? (
                         <div className="space-y-3">
                             <div>
@@ -178,8 +170,8 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                             </div>
                         </>
                     )}
-                </CardContent>
-            </Card>
-        </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     );
 };

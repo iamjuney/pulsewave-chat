@@ -3,13 +3,6 @@ import { MessageSquare } from "lucide-react";
 export const WorkspaceSidebar = () => {
     return (
         <div className="w-[72px] flex flex-col items-center py-4 bg-[#141418] border-r border-[#1e1e24] shrink-0 z-20">
-            {/* Window controls mockup */}
-            <div className="flex gap-1.5 mb-8">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-
             <div className="flex flex-col gap-4 items-center overflow-y-auto no-scrollbar flex-1 pt-4">
                 {/* Main Workspace Icon */}
                 <div className="relative group">

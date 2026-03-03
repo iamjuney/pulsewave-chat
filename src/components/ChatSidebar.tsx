@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import type { Room, RoomMember, User } from "@/module_bindings/types";
 import { Search } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { RoomList } from "./RoomList";
 
 interface ChatSidebarProps {
@@ -35,6 +37,16 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
     onEditName,
     onOpenProfile,
 }) => {
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [newChannelName, setNewChannelName] = useState("");
+
+    const handleCreateSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newChannelName.trim()) return;
+        onCreateRoom(newChannelName.trim());
+        setNewChannelName("");
+        setIsCreateOpen(false);
+    };
     return (
         <div className="flex flex-col h-full bg-[#1C1C24] border-r border-[#1e1e24]">
             <div className="p-6 pb-2 shrink-0">
@@ -46,15 +58,37 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                     />
                 </div>
                 
-                <button 
-                    onClick={() => {
-                        const name = prompt("Enter new channel name:");
-                        if (name) onCreateRoom(name);
-                    }}
-                    className="w-full h-11 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-xl text-[13px] font-semibold tracking-wide shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
-                >
-                    Start new chat
-                </button>
+                <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                    <DialogTrigger asChild>
+                        <button 
+                            className="w-full h-11 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-xl text-[13px] font-semibold tracking-wide shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+                        >
+                            Start new chat
+                        </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <form onSubmit={handleCreateSubmit}>
+                            <DialogHeader>
+                                <DialogTitle>Start new chat</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid gap-2">
+                                    <Input
+                                        id="name"
+                                        placeholder="Channel name..."
+                                        value={newChannelName}
+                                        onChange={(e) => setNewChannelName(e.target.value)}
+                                        className="col-span-3"
+                                        autoFocus
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">Create Channel</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <RoomList
