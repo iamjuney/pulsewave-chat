@@ -1,8 +1,10 @@
 # ⚡ Pulsewave Chat
 
+![Pulsewave Chat UI](./ui.png)
+
 A **real-time chat application** powered by [SpacetimeDB](https://spacetimedb.com) — a next-gen serverless database that replaces your backend. Built with React 19, TypeScript, and Vite for a lightning-fast, modern chat experience.
 
-> 🌐 **Live Demo**: Deployed on [Vercel](https://vercel.com) with SpacetimeDB MainCloud
+> 🌐 **Live Demo**: Deployed on [Vercel](https://pulsewave.aljonlerios.com/) with SpacetimeDB MainCloud
 
 ---
 
