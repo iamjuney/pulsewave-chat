@@ -571,7 +571,7 @@ function App() {
             </aside>
 
             {/* Main Chat Area */}
-            <main className="flex-1 flex flex-col min-w-0 bg-[#17181c] relative z-10 border-x border-[#1e1e24] shadow-2xl z-10 rounded-tr-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden shadow-black/50">
+            <main className="flex-1 flex flex-col min-w-0 bg-[#17181c] relative z-10 border-x border-[#1e1e24] shadow-2xl z-10 overflow-hidden shadow-black/50">
                 {/* Header */}
                 <ChatHeader
                     room={currentRoomDisplay}
