@@ -1,24 +1,25 @@
-import React, {
-    useState,
-    useEffect,
-    useRef,
+import {
     useCallback,
+    useEffect,
     useMemo,
+    useRef,
+    useState,
 } from "react";
-import "./index.css";
-import { tables, reducers } from "./module_bindings";
-import { useSpacetimeDB, useTable, useReducer } from "spacetimedb/react";
+import { useAuth } from "react-oidc-context";
 import { Identity, Timestamp } from "spacetimedb";
+import { useReducer, useSpacetimeDB, useTable } from "spacetimedb/react";
+import "./index.css";
+import { reducers, tables } from "./module_bindings";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2 } from "lucide-react";
-import { ChatSidebar } from "./components/ChatSidebar";
 import { ChatHeader } from "./components/ChatHeader";
-import { ChatMessage } from "./components/ChatMessage";
 import { ChatInput } from "./components/ChatInput";
+import { ChatMessage } from "./components/ChatMessage";
+import { ChatSidebar } from "./components/ChatSidebar";
+import { EmptyState } from "./components/EmptyState";
 import { MessageSearch } from "./components/MessageSearch";
 import { UserProfileCard } from "./components/UserProfileCard";
-import { EmptyState } from "./components/EmptyState";
 import type { PrettyMessage, ReactionGroup } from "./types";
 
 function App() {
@@ -347,6 +348,23 @@ function App() {
     );
     const name =
         currentUser?.name || identity?.toHexString().substring(0, 8) || "";
+
+    // Auto-set name from OIDC email on first connection
+    const auth = useAuth();
+    const hasAutoSetName = useRef(false);
+    useEffect(() => {
+        if (
+            !hasAutoSetName.current &&
+            connected &&
+            currentUser &&
+            !currentUser.name &&
+            auth.user?.profile?.email
+        ) {
+            hasAutoSetName.current = true;
+            const emailName = (auth.user.profile.email as string).split("@")[0];
+            setName({ name: emailName });
+        }
+    }, [connected, currentUser, auth.user?.profile?.email, setName]);
 
     // ── Handlers ────────────────────────────────────────────────────────
     const handleSendMessage = async (text: string, imageUrl?: string) => {

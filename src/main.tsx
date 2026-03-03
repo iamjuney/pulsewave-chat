@@ -1,13 +1,13 @@
 import { StrictMode, useMemo } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
+import { AuthProvider, useAuth } from "react-oidc-context";
 import { Identity } from "spacetimedb";
 import { SpacetimeDBProvider } from "spacetimedb/react";
-import { DbConnection, ErrorContext } from "./module_bindings/index.ts";
-import { AuthProvider, useAuth } from "react-oidc-context";
+import App from "./App.tsx";
 import { oidcConfig } from "./auth.ts";
 import { LoginPage } from "./components/LoginPage.tsx";
+import "./index.css";
+import { DbConnection, ErrorContext } from "./module_bindings/index.ts";
 
 const HOST = import.meta.env.VITE_SPACETIMEDB_HOST ?? "ws://localhost:3000";
 const DB_NAME = import.meta.env.VITE_SPACETIMEDB_DB_NAME ?? "quickstart-chat";
@@ -32,16 +32,19 @@ const onConnectError = (_ctx: ErrorContext, err: Error) => {
 function AuthenticatedApp() {
     const auth = useAuth();
 
+    // Use the OIDC token so the same email always resolves to the same identity
+    const token = auth.user?.access_token || localStorage.getItem(TOKEN_KEY) || undefined;
+
     const connectionBuilder = useMemo(
         () =>
             DbConnection.builder()
                 .withUri(HOST)
                 .withDatabaseName(DB_NAME)
-                .withToken(localStorage.getItem(TOKEN_KEY) || undefined)
+                .withToken(token)
                 .onConnect(onConnect)
                 .onDisconnect(onDisconnect)
                 .onConnectError(onConnectError),
-        [],
+        [token],
     );
 
     if (!auth.isAuthenticated) {
