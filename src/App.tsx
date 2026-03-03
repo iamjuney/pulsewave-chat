@@ -1,9 +1,9 @@
 import {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
 } from "react";
 import { useAuth } from "react-oidc-context";
 import { Identity, Timestamp } from "spacetimedb";
@@ -19,7 +19,9 @@ import { ChatMessage } from "./components/ChatMessage";
 import { ChatSidebar } from "./components/ChatSidebar";
 import { EmptyState } from "./components/EmptyState";
 import { MessageSearch } from "./components/MessageSearch";
+import { RightSidebar } from "./components/RightSidebar";
 import { UserProfileCard } from "./components/UserProfileCard";
+import { WorkspaceSidebar } from "./components/WorkspaceSidebar";
 import type { PrettyMessage, ReactionGroup } from "./types";
 
 function App() {
@@ -513,7 +515,7 @@ function App() {
                         <Loader2 className="h-12 w-12 text-primary animate-spin relative" />
                     </div>
                     <h1 className="text-xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
-                        Spacetime Chat
+                        Pulsewave Chat
                     </h1>
                 </div>
             </div>
@@ -544,13 +546,16 @@ function App() {
 
     return (
         <div className="flex h-dvh bg-background text-foreground overflow-hidden font-sans">
-            {/* Desktop Sidebar */}
-            <aside className="hidden md:block w-72 shrink-0">
+            {/* Far Left Workspace Sidebar */}
+            <WorkspaceSidebar />
+
+            {/* Inner Left Chat Sidebar */}
+            <aside className="hidden md:block w-[320px] shrink-0">
                 {sidebarContent}
             </aside>
 
             {/* Main Chat Area */}
-            <main className="flex-1 flex flex-col min-w-0 bg-muted/5 relative">
+            <main className="flex-1 flex flex-col min-w-0 bg-[#17181c] relative z-10 border-x border-[#1e1e24] shadow-2xl z-10 rounded-tr-3xl lg:rounded-tr-none lg:rounded-l-3xl overflow-hidden shadow-black/50">
                 {/* Header */}
                 <ChatHeader
                     room={currentRoomDisplay}
@@ -732,6 +737,13 @@ function App() {
                     }
                 />
             )}
+
+            {/* Right Sidebar */}
+            <RightSidebar 
+                currentUserName={name}
+                currentAvatarUrl={currentUser?.avatarUrl}
+                onToggleProfile={() => setShowOwnProfile(true)}
+            />
         </div>
     );
 }

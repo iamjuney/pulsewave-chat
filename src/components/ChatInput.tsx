@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, ImageIcon, X, Laugh } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ImageIcon, Mic, Send, X, Zap } from "lucide-react";
+import React, { useState } from "react";
 import { ReplyPreview } from "./ReplyPreview";
 
 interface ChatInputProps {
@@ -43,7 +43,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     };
 
     return (
-        <div className="p-4 bg-background border-t shrink-0">
+        <div className="p-4 bg-[#17181c] shrink-0">
             {/* Typing indicator */}
             {typingUsers.length > 0 && (
                 <div className="max-w-5xl mx-auto w-full mb-2 px-1">
@@ -93,22 +93,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
                 <form
                     onSubmit={handleSubmit}
-                    className="flex items-end gap-2 group"
+                    className="flex max-w-4xl mx-auto"
                 >
-                    <div className="flex gap-1 mb-1 mr-1">
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className={`h-8 w-8 rounded-full text-muted-foreground hover:text-primary ${imageUrl ? "text-primary" : ""}`}
-                            onClick={() => setShowImageInput(!showImageInput)}
-                            title="Add image URL"
-                        >
-                            <ImageIcon className="h-4 w-4" />
-                        </Button>
-                    </div>
-
-                    <div className="relative flex-1 rounded-2xl border bg-muted/30 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+                    <div className="relative flex-1 flex items-center bg-[#202127] rounded-xl pl-4 pr-3 py-2">
+                        <Mic className="h-5 w-5 text-muted-foreground mr-3 shrink-0" />
                         <Textarea
                             value={message}
                             onChange={(e) => {
@@ -124,38 +112,45 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                             placeholder={
                                 disabled
                                     ? "Join this channel to send messages..."
-                                    : "Type your message..."
+                                    : "Type something..."
                             }
-                            className="min-h-[52px] max-h-[200px] w-full resize-none border-0 bg-transparent text-sm py-4 px-6 focus-visible:ring-0 placeholder:text-muted-foreground/60 shadow-none"
+                            className="min-h-[40px] max-h-[160px] w-full resize-none border-0 bg-transparent text-[14px] py-2 px-0 focus-visible:ring-0 placeholder:text-muted-foreground/50 shadow-none text-white overflow-hidden"
                             rows={1}
                             disabled={disabled}
                         />
-                        <div className="absolute right-3 bottom-2.5">
+                        <div className="flex items-center gap-1 ml-4 shrink-0 bg-[#17181c] p-1 rounded-xl">
                             <Button
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 rounded-full text-muted-foreground hover:text-primary"
+                                className={`h-8 w-8 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 ${imageUrl ? "text-primary" : ""}`}
+                                onClick={() => setShowImageInput(!showImageInput)}
+                                title="Add image URL"
                             >
-                                <Laugh className="h-4 w-4" />
+                                <ImageIcon className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5"
+                            >
+                                <Zap className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                type="submit"
+                                size="icon"
+                                className="h-8 w-8 rounded-lg bg-white text-black hover:bg-gray-200 transition-colors ml-1"
+                                disabled={
+                                    (message.trim() === "" && !imageUrl.trim()) ||
+                                    isSending ||
+                                    disabled
+                                }
+                            >
+                                <Send className="h-4 w-4" />
                             </Button>
                         </div>
                     </div>
-
-                    <Button
-                        type="submit"
-                        size="icon"
-                        className="h-11 w-11 shrink-0 rounded-2xl shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
-                        disabled={
-                            (message.trim() === "" && !imageUrl.trim()) ||
-                            isSending ||
-                            disabled
-                        }
-                    >
-                        <Send
-                            className={`h-4 w-4 transition-transform ${message.trim() || imageUrl.trim() ? "translate-x-0.5 -translate-y-0.5 rotate-6" : ""}`}
-                        />
-                    </Button>
                 </form>
                 <p className="text-[10px] text-center text-muted-foreground/50 mt-2 font-medium">
                     Press <kbd className="px-1 rounded bg-muted">Enter</kbd> to

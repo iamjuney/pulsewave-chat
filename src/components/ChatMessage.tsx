@@ -1,31 +1,30 @@
-import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import type { PrettyMessage, ReactionGroup } from "@/types";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
-    Pencil,
-    Trash2,
-    MoreHorizontal,
-    SmilePlus,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import type { PrettyMessage, ReactionGroup } from "@/types";
+import {
     Check,
-    X,
+    MoreHorizontal,
+    Pencil,
     Reply,
-    ImageIcon,
+    SmilePlus,
+    Trash2,
+    X
 } from "lucide-react";
+import React, { useState } from "react";
 
 const EMOJI_OPTIONS = ["👍", "❤️", "😂", "🎉", "😮", "🔥"];
 
@@ -126,9 +125,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     {showAvatar && !isMe && (
                         <button
                             onClick={onClickSender}
-                            className="text-[10px] font-semibold text-muted-foreground ml-1 mb-0.5 uppercase tracking-tighter hover:text-primary transition-colors"
+                            className="text-[12px] font-bold text-white mb-1.5 ml-1 flex items-center gap-2 transition-colors"
                         >
                             {message.senderName}
+                            <span className="text-[10px] text-muted-foreground/50 font-medium">
+                                {message.senderIdentity?.substring(0, 4)}
+                            </span>
                         </button>
                     )}
 
@@ -273,10 +275,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <div
-                                            className={`px-4 py-2 rounded-2xl text-[14px] leading-relaxed break-words transition-all duration-200 ${
+                                            className={`px-5 py-3.5 text-[14px] leading-relaxed break-all transition-all duration-200 ${
                                                 isMe
-                                                    ? "bg-primary text-primary-foreground rounded-br-none shadow-md hover:brightness-110"
-                                                    : "bg-card border border-border/50 text-card-foreground rounded-bl-none shadow-sm hover:bg-accent/50"
+                                                    ? "bg-[#2A2C35] text-white rounded-2xl rounded-tr-sm shadow-sm"
+                                                    : "bg-[#202127] text-white rounded-2xl rounded-tl-sm shadow-sm"
                                             }`}
                                         >
                                             {message.text && (
@@ -335,10 +337,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                 <button
                                     key={r.emoji}
                                     onClick={() => onToggleReaction?.(r.emoji)}
-                                    className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border transition-colors ${
+                                    className={`inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-full transition-colors ${
                                         r.reacted
-                                            ? "bg-primary/10 border-primary/30 text-primary"
-                                            : "bg-muted/50 border-border/50 text-muted-foreground hover:bg-accent"
+                                            ? "bg-[#1C1C24] text-white/90 border border-white/10"
+                                            : "bg-[#1C1C24] text-muted-foreground hover:bg-[#202127]"
                                     }`}
                                 >
                                     <span>{r.emoji}</span>

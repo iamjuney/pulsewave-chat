@@ -1,10 +1,8 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { RoomList } from "./RoomList";
+import { Input } from "@/components/ui/input";
 import type { Room, RoomMember, User } from "@/module_bindings/types";
+import { Search } from "lucide-react";
+import React from "react";
+import { RoomList } from "./RoomList";
 
 interface ChatSidebarProps {
     rooms: readonly Room[];
@@ -38,14 +36,25 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
     onOpenProfile,
 }) => {
     return (
-        <div className="flex flex-col h-full bg-card border-r">
-            <div className="p-4 border-b flex items-center justify-between shrink-0">
-                <h1 className="text-xl font-bold tracking-tight text-primary">
-                    Chat
-                </h1>
-                <Button variant="ghost" size="icon" onClick={onEditName}>
-                    <Settings className="h-4 w-4" />
-                </Button>
+        <div className="flex flex-col h-full bg-[#1C1C24] border-r border-[#1e1e24]">
+            <div className="p-6 pb-2 shrink-0">
+                <div className="relative mb-6">
+                    <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-muted-foreground/60" />
+                    <Input 
+                        placeholder="Search chat" 
+                        className="h-9 w-full bg-[#141418] border-none text-xs pl-10 placeholder:text-muted-foreground/50 rounded-xl focus-visible:ring-1 focus-visible:ring-primary/50"
+                    />
+                </div>
+                
+                <button 
+                    onClick={() => {
+                        const name = prompt("Enter new channel name:");
+                        if (name) onCreateRoom(name);
+                    }}
+                    className="w-full h-11 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white rounded-xl text-[13px] font-semibold tracking-wide shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+                >
+                    Start new chat
+                </button>
             </div>
 
             <RoomList
@@ -59,28 +68,6 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 onCreateRoom={onCreateRoom}
                 onCreateDm={onCreateDm}
             />
-
-            <div className="p-4 border-t bg-muted/30">
-                <button
-                    className="flex items-center gap-3 w-full hover:opacity-80 transition-opacity"
-                    onClick={onOpenProfile}
-                >
-                    <Avatar className="h-9 w-9 border-2 border-primary/20">
-                        <AvatarImage src={currentAvatarUrl ?? undefined} />
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                            {currentUserName.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col min-w-0 text-left">
-                        <span className="text-sm font-semibold truncate">
-                            {currentUserName}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                            Active Now
-                        </span>
-                    </div>
-                </button>
-            </div>
         </div>
     );
 };

@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import type { Room, RoomMember, User } from "@/module_bindings/types";
 import {
-    Hash,
-    MessageCircle,
-    Plus,
-    Users,
     ChevronDown,
     ChevronRight,
+    Hash,
+    Plus,
+    Users
 } from "lucide-react";
-import type { Room, RoomMember, User } from "@/module_bindings/types";
+import React, { useState } from "react";
 
 interface RoomListProps {
     rooms: readonly Room[];
@@ -126,7 +124,7 @@ export const RoomList: React.FC<RoomListProps> = ({
                 </div>
 
                 {showCreateChannel && (
-                    <form onSubmit={handleCreateChannel} className="px-3 mb-2">
+                    <form onSubmit={handleCreateChannel} className="px-5 mb-2">
                         <Input
                             autoFocus
                             placeholder="Channel name..."
@@ -140,7 +138,7 @@ export const RoomList: React.FC<RoomListProps> = ({
                                 if (e.key === "Escape")
                                     setShowCreateChannel(false);
                             }}
-                            className="h-8 text-xs"
+                            className="h-8 text-xs bg-[#141418] border-none"
                         />
                     </form>
                 )}
@@ -151,31 +149,44 @@ export const RoomList: React.FC<RoomListProps> = ({
                             const isSelected = selectedRoomId === room.id;
                             const unread =
                                 unreadCounts.get(room.id.toString()) || 0;
-                            return (
-                                <button
-                                    key={room.id.toString()}
-                                    onClick={() => onSelectRoom(room.id)}
-                                    className={`flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors ${
-                                        isSelected
-                                            ? "bg-accent text-accent-foreground font-medium"
-                                            : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                                    }`}
-                                >
-                                    <Hash className="h-4 w-4 shrink-0 opacity-60" />
-                                    <span className="truncate flex-1 text-left">
-                                        {room.name}
-                                    </span>
-                                    {unread > 0 && (
-                                        <Badge
-                                            variant="destructive"
-                                            className="h-5 min-w-5 px-1.5 text-[10px] font-bold"
-                                        >
-                                            {unread}
-                                        </Badge>
-                                    )}
-                                </button>
-                            );
-                        })}
+        const seed = room.id.toString().substring(0,3);
+        const avatarColors = ["bg-pink-500", "bg-purple-500", "bg-indigo-500", "bg-blue-500", "bg-teal-500", "bg-emerald-500", "bg-orange-500"];
+        const avatarColor = avatarColors[parseInt(seed) % avatarColors.length];
+
+        return (
+            <button
+                key={room.id.toString()}
+                onClick={() => onSelectRoom(room.id)}
+                className={`flex items-center gap-3 w-full px-5 py-3 text-[13px] transition-colors group ${
+                    isSelected
+                        ? "bg-white/5"
+                        : "hover:bg-white/[0.02]"
+                }`}
+            >
+                <div className={`h-10 w-10 shrink-0 rounded-full flex items-center justify-center text-white font-bold opacity-90 ${avatarColor}`}>
+                    {room.name.substring(0, 2).toUpperCase()}
+                </div>
+                <div className="flex flex-col min-w-0 flex-1 items-start justify-center">
+                    <span className={`truncate w-full text-left font-semibold ${isSelected ? "text-white" : "text-foreground/90 group-hover:text-white"}`}>
+                        {room.name}
+                    </span>
+                    <span className="truncate w-full text-left text-[11px] text-muted-foreground/70 mt-0.5">
+                        Please add more note to...
+                    </span>
+                </div>
+                <div className="shrink-0 flex flex-col items-end gap-1.5 ml-2">
+                    <span className="text-[10px] text-muted-foreground/60 leading-none">
+                        • 2h
+                    </span>
+                    {unread > 0 && (
+                        <div className="h-4 min-w-[16px] px-1 rounded-full bg-blue-500 flex items-center justify-center text-[9px] font-bold text-white shadow-sm shadow-blue-500/30">
+                            {unread}
+                        </div>
+                    )}
+                </div>
+            </button>
+        );
+    })}
 
                         {/* Unjoined channels */}
                         {unjoinedChannels.length > 0 && (
@@ -281,47 +292,54 @@ export const RoomList: React.FC<RoomListProps> = ({
                                     .toHexString()
                                     .substring(0, 8) ||
                                 "Unknown";
-                            return (
-                                <button
-                                    key={room.id.toString()}
-                                    onClick={() => onSelectRoom(room.id)}
-                                    className={`flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors ${
-                                        isSelected
-                                            ? "bg-accent text-accent-foreground font-medium"
-                                            : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                                    }`}
-                                >
-                                    <div className="relative shrink-0">
-                                        <Avatar className="h-6 w-6">
-                                            <AvatarImage
-                                                src={
-                                                    partner?.avatarUrl ??
-                                                    undefined
-                                                }
-                                            />
-                                            <AvatarFallback className="text-[8px] bg-primary/10 text-primary">
-                                                {partnerName
-                                                    .substring(0, 2)
-                                                    .toUpperCase()}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        {partner?.online && (
-                                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-card" />
-                                        )}
-                                    </div>
-                                    <span className="truncate flex-1 text-left">
-                                        {partnerName}
-                                    </span>
-                                    {unread > 0 && (
-                                        <Badge
-                                            variant="destructive"
-                                            className="h-5 min-w-5 px-1.5 text-[10px] font-bold"
-                                        >
-                                            {unread}
-                                        </Badge>
-                                    )}
-                                </button>
-                            );
+                                return (
+                                    <button
+                                        key={room.id.toString()}
+                                        onClick={() => onSelectRoom(room.id)}
+                                        className={`flex items-center gap-3 w-full px-5 py-3 text-[13px] transition-colors group ${
+                                            isSelected
+                                                ? "bg-white/5"
+                                                : "hover:bg-white/[0.02]"
+                                        }`}
+                                    >
+                                        <div className="relative shrink-0">
+                                            <Avatar className="h-10 w-10 border-0">
+                                                <AvatarImage
+                                                    src={
+                                                        partner?.avatarUrl ??
+                                                        undefined
+                                                    }
+                                                />
+                                                <AvatarFallback className="bg-yellow-400 text-black font-bold">
+                                                    {partnerName
+                                                        .substring(0, 2)
+                                                        .toUpperCase()}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            {partner?.online && (
+                                                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-[#1C1C24]" />
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col min-w-0 flex-1 items-start justify-center">
+                                            <span className={`truncate w-full text-left font-semibold ${isSelected ? "text-white" : "text-foreground/90 group-hover:text-white"}`}>
+                                                {partnerName}
+                                            </span>
+                                            <span className="truncate w-full text-left text-[11px] text-muted-foreground/70 mt-0.5">
+                                                Hey man, have more time...
+                                            </span>
+                                        </div>
+                                        <div className="shrink-0 flex flex-col items-end gap-1.5 ml-2">
+                                            <span className="text-[10px] text-muted-foreground/60 leading-none">
+                                                • 3d
+                                            </span>
+                                            {unread > 0 && (
+                                                <div className="h-4 min-w-[16px] px-1 rounded-full bg-destructive flex items-center justify-center text-[9px] font-bold text-white shadow-sm shadow-destructive/30">
+                                                    {unread}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </button>
+                                );
                         })}
                         {dms.length === 0 && (
                             <p className="text-xs text-muted-foreground/50 px-2 py-2 italic">

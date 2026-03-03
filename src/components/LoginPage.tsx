@@ -1,6 +1,6 @@
-import { useAuth } from "react-oidc-context";
 import { Button } from "@/components/ui/button";
-import { Loader2, MessageCircle, LogIn, UserPlus } from "lucide-react";
+import { Loader2, LogIn, MessageCircle } from "lucide-react";
+import { useAuth } from "react-oidc-context";
 
 export function LoginPage() {
     const auth = useAuth();
@@ -56,7 +56,7 @@ export function LoginPage() {
                     </div>
                     <div className="text-center space-y-1">
                         <h1 className="text-2xl font-bold tracking-tight">
-                            Spacetime Chat
+                            Pulsewave Chat
                         </h1>
                         <p className="text-sm text-muted-foreground">
                             Sign in to start chatting in real-time
